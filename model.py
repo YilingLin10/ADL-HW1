@@ -59,7 +59,7 @@ class SeqClassifier(torch.nn.Module):
         # 4. output.shape = ()
         # 4. use the last output from lstm (batch_size, 2*hidden_size)
         # TODO: 加上 pooling
-        output = output[:, -1, :]
+        output = torch.cat((output[:,-1,:self.hidden_size], output[:,0,-self.hidden_size:]),dim=1)
         
         # TODO: 加上dropout
         output = self.dropout(output)

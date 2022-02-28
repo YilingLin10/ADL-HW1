@@ -52,7 +52,7 @@ def main(args):
     writer = SummaryWriter()
     # TODO: init optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay = 1e-6)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[20,30,50], gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[10,20,30], gamma=0.1)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_loss, step = np.inf, 0
@@ -133,13 +133,13 @@ def parse_args() -> Namespace:
     parser.add_argument("--max_len", type=int, default=128)
 
     # model
-    parser.add_argument("--hidden_size", type=int, default=256)
+    parser.add_argument("--hidden_size", type=int, default=512)
     parser.add_argument("--num_layers", type=int, default=4)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--bidirectional", type=bool, default=True)
 
     # optimizer
-    parser.add_argument("--lr", type=float, default=5e-4)
+    parser.add_argument("--lr", type=float, default=1e-3)
 
     # data loader
     parser.add_argument("--batch_size", type=int, default=128)
@@ -148,7 +148,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
     )
-    parser.add_argument("--num_epoch", type=int, default=70)
+    parser.add_argument("--num_epoch", type=int, default=40)
 
     args = parser.parse_args()
     return args
