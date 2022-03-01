@@ -56,15 +56,13 @@ class SeqClassifier(torch.nn.Module):
         
         # 3. propagate input through LSTM
         output, (hn, cn) = self.lstm(batch, (h0, c0))
-        # 4. output.shape = ()
         # 4. use the last output from lstm (batch_size, 2*hidden_size)
-        # TODO: 加上 pooling
         output = torch.cat((output[:,-1,:self.hidden_size], output[:,0,-self.hidden_size:]),dim=1)
         
-        # TODO: 加上dropout
+        # 5. 加上dropout
         output = self.dropout(output)
-        # 5. dense layer (128, 1024) --> (128, 150)
+        # 6. dense layer (128, 1024) --> (128, 150)
         output = self.dense(output)
-        # 6. log_softmax (128, 150) --> (128, 150)
+        # 7. log_softmax (128, 150) --> (128, 150)
         output = F.log_softmax(output, dim=1)
         return output
