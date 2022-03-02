@@ -36,7 +36,7 @@ class SeqClsDataset(Dataset):
         # 1. Tokenize sentences 
         tokenized_texts = [sample["text"].split(" ")  for sample in samples]
         # 2. Convert sentences to ix and pad them to max_len
-        ix_of_texts = self.vocab.encode_batch(tokenized_texts)
+        ix_of_texts = self.vocab.encode_batch(tokenized_texts, to_len=self.max_len)
         ix_of_texts = [torch.LongTensor(ix_of_text) for ix_of_text in ix_of_texts]
         ix_of_texts = torch.stack(ix_of_texts,0)
         

@@ -47,6 +47,7 @@ def main(args):
         args.dropout,
         args.bidirectional,
         datasets[TRAIN].num_classes,
+        args.max_len
     )
     model = model.to(args.device)
     writer = SummaryWriter()
@@ -130,12 +131,12 @@ def parse_args() -> Namespace:
     )
 
     # data
-    parser.add_argument("--max_len", type=int, default=128)
+    parser.add_argument("--max_len", type=int, default=20)
 
     # model
     parser.add_argument("--hidden_size", type=int, default=512)
-    parser.add_argument("--num_layers", type=int, default=4)
-    parser.add_argument("--dropout", type=float, default=0.5)
+    parser.add_argument("--num_layers", type=int, default=1)
+    parser.add_argument("--dropout", type=float, default=0.2)
     parser.add_argument("--bidirectional", type=bool, default=True)
 
     # optimizer
@@ -148,7 +149,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
     )
-    parser.add_argument("--num_epoch", type=int, default=15)
+    parser.add_argument("--num_epoch", type=int, default=40)
 
     args = parser.parse_args()
     return args
