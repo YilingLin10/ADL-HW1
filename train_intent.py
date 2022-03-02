@@ -52,7 +52,7 @@ def main(args):
     writer = SummaryWriter()
     # TODO: init optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay = 1e-6)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[6,10], gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[3,6], gamma=0.5)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_loss, step = np.inf, 0
@@ -148,7 +148,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--device", type=torch.device, help="cpu, cuda, cuda:0, cuda:1", default="cpu"
     )
-    parser.add_argument("--num_epoch", type=int, default=15)
+    parser.add_argument("--num_epoch", type=int, default=10)
 
     args = parser.parse_args()
     return args
