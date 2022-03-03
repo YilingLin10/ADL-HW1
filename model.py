@@ -68,3 +68,4 @@ class SeqClassifier(torch.nn.Module):
         # 6. log_softmax (128, 150) --> (128, 150)
         output = F.log_softmax(output, dim=1)
         return output
+    
