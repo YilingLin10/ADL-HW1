@@ -27,11 +27,12 @@ class SeqClassifier(torch.nn.Module):
         # embed.shape = ([4117, 300])
         self.embed_size = embeddings.size(dim=1)
         # LSTM layer
-        self.lstm = torch.nn.LSTM(
+        self.gru = torch.nn.GRU(
             input_size=self.embed_size, 
             hidden_size=hidden_size, 
             num_layers=num_layers, 
             bidirectional=bidirectional,
+            dropout=dropout,
             batch_first=True)
         # fully-connected layer (bidirectional --> *2)
         self.dense = torch.nn.Linear(self.hidden_size * 2, self.num_class)
@@ -52,10 +53,9 @@ class SeqClassifier(torch.nn.Module):
         # 2. initialize hidden state and cell state for lstm (2*2, 128, 512)
         batch_size = batch.size(0)
         h0 = Variable(torch.zeros(2 * self.num_layers, batch_size, self.hidden_size))
-        c0 = Variable(torch.zeros(2 * self.num_layers, batch_size, self.hidden_size))
         
         # 3. propagate input through LSTM
-        output, (hn, cn) = self.lstm(batch, (h0, c0))
+        output, hn = self.gru(batch, h0)
         # 4. output.shape = ()
         # 4. use the last output from lstm (batch_size, 2*hidden_size)
         # TODO: 加上 pooling

@@ -52,7 +52,7 @@ def main(args):
     writer = SummaryWriter()
     # TODO: init optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay = 1e-6)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[3,6], gamma=0.5)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[3,5,7], gamma=0.5)
 
     epoch_pbar = trange(args.num_epoch, desc="Epoch")
     best_loss, step = np.inf, 0
@@ -102,7 +102,7 @@ def main(args):
         else: 
             early_stop_count += 1
 
-        if early_stop_count >= 5:
+        if early_stop_count >= 3:
             print('\nModel is not improving, so we halt the training session.')
             return
     # TODO: Inference on test set
@@ -133,8 +133,8 @@ def parse_args() -> Namespace:
     parser.add_argument("--max_len", type=int, default=128)
 
     # model
-    parser.add_argument("--hidden_size", type=int, default=512)
-    parser.add_argument("--num_layers", type=int, default=4)
+    parser.add_argument("--hidden_size", type=int, default=128)
+    parser.add_argument("--num_layers", type=int, default=2)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--bidirectional", type=bool, default=True)
 
