@@ -13,6 +13,8 @@ from torch.utils.tensorboard import SummaryWriter
 from dataset import SeqTagDataset
 from utils import Vocab
 from model import SeqTagClassifier
+from seqeval.metrics import classification_report
+from seqeval.scheme import IOB2
 
 TRAIN = "train"
 DEV = "eval"
@@ -80,19 +82,46 @@ def main(args):
         # TODO: Evaluation loop - calculate accuracy and save model weights
         model.eval()
         loss_record = []
+        val_preds, val_tags = [], []
         
         for x_val, y_val in dev_loader:
             x_val, y_val = x_val.to(args.device), y_val.to(args.device)
             with torch.no_grad():
-                pred = model(x_val)
-                loss = nll_loss(pred, y_val)
+                batch_size = x_val.size(0)
+                out = model(x_val)
+                loss = nll_loss(out, y_val)
                 
+                batch_y = []
+                for tags in y_val:
+                    single_y = []
+                    for tag in tags:
+                        if tag.item() < 0:
+                            break
+                        single_y.append(datasets[DEV].idx2tag(tag.item()))
+                    batch_y.append(single_y)
+                val_tags.extend(batch_y)
+                
+                pred = torch.exp(out)
+                pred = torch.max(out,dim=1)[1]
+                pred = pred.view(batch_size, -1)
+                batch_prediction = []
+                for sentence, tags in zip(x_val, pred):
+                    single_prediction = []
+                    for i, word in enumerate(sentence):
+                        if word.item() != 0:
+                            single_prediction.append(datasets[DEV].idx2tag(tags[i].item()))
+                
+                    batch_prediction.append(single_prediction)
+                
+                val_preds.extend(batch_prediction)
             loss_record.append(loss.item())
             
         mean_valid_loss = sum(loss_record)/len(loss_record)
         print(f'Epoch [{epoch+1}/{args.num_epoch}]: Train loss: {mean_train_loss:.4f}, Valid loss: {mean_valid_loss:.4f}')
         writer.add_scalar('Loss/valid', mean_valid_loss, step)
         scheduler.step()
+        print(classification_report(val_tags, val_preds, scheme=IOB2, mode='strict'))
+        accuracy(val_tags, val_preds)
         
         if mean_valid_loss < best_loss:
             best_loss = mean_valid_loss
@@ -171,8 +200,22 @@ def nll_loss(predict, y):
     ce = -torch.sum(predict) / total_token
     
     return ce
-    
 
+def accuracy(tags, preds):
+    total_token = 0
+    correct_token = 0
+    correct_sequence = 0
+    for tag, pred in zip(tags, preds):
+        total_token += len(pred)
+        if tag == pred:
+            correct_sequence += 1
+        for t, p in zip(tag, pred):
+            if t == p:
+                correct_token += 1
+    token_acc = correct_token / total_token
+    join_acc = correct_sequence / len(tags)            
+    print("Token Accuracy: {:.1%}".format(token_acc))
+    print("Join Accuracy: {:.1%}".format(join_acc))
 if __name__ == "__main__":
     args = parse_args()
     args.ckpt_dir.mkdir(parents=True, exist_ok=True)
