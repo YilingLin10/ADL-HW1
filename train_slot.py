@@ -143,19 +143,19 @@ def parse_args() -> Namespace:
         "--data_dir",
         type=Path,
         help="Directory to the dataset.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/data/slot/",
+        default="./data/slot/",
     )
     parser.add_argument(
         "--cache_dir",
         type=Path,
         help="Directory to the preprocessed caches.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache/slot/",
+        default="./cache/slot/",
     )
     parser.add_argument(
         "--ckpt_dir",
         type=Path,
         help="Directory to save the model file.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/ckpt/slot/",
+        default="./ckpt/slot/",
     )
 
     # data

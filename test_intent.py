@@ -81,7 +81,7 @@ def parse_args() -> Namespace:
         "--cache_dir",
         type=Path,
         help="Directory to the preprocessed caches.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache/intent/",
+        default="./cache/intent/",
     )
     parser.add_argument(
         "--ckpt_path",
