@@ -1,3 +1,7 @@
+if [ ! -d "/cache" ]; then
+  wget https://www.dropbox.com/s/gx9s1vfetkjs5sk/cache.zip?dl=1 -O cache.zip
+  unzip cache.zip
+fi
 if [ ! -f model_intent.ckpt ]; then
   wget https://www.dropbox.com/s/6s2pajajcmr9edv/model_intent.ckpt?dl=1 -O model_intent.ckpt
 fi
