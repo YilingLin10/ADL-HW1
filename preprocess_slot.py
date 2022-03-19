@@ -54,13 +54,13 @@ def parse_args() -> Namespace:
         "--output_dir",
         type=Path,
         help="Directory to save the processed file.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache/slot/",
+        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache2/slot/",
     )
     parser.add_argument(
         "--vocab_size",
         type=int,
         help="Number of token in the vocabulary",
-        default=10_000,
+        default=1_000,
     )
     args = parser.parse_args()
     return args

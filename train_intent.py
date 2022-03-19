@@ -120,7 +120,7 @@ def parse_args() -> Namespace:
         "--cache_dir",
         type=Path,
         help="Directory to the preprocessed caches.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache/intent/",
+        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache2/intent/",
     )
     parser.add_argument(
         "--ckpt_dir",
@@ -134,12 +134,12 @@ def parse_args() -> Namespace:
 
     # model
     parser.add_argument("--hidden_size", type=int, default=376)
-    parser.add_argument("--num_layers", type=int, default=2)
+    parser.add_argument("--num_layers", type=int, default=1)
     parser.add_argument("--dropout", type=float, default=0.1)
     parser.add_argument("--bidirectional", type=bool, default=True)
 
     # optimizer
-    parser.add_argument("--lr", type=float, default=3e-3)
+    parser.add_argument("--lr", type=float, default=2e-3)
 
     # data loader
     parser.add_argument("--batch_size", type=int, default=32)

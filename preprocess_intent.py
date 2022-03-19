@@ -58,8 +58,9 @@ def build_vocab(
     logging.info(
         f"Token covered: {num_matched} / {len(vocab.tokens)} = {num_matched / len(vocab.tokens)}"
     )
+    rand_embedding = [random() * 2 - 1 for _ in range(glove_dim)]
     embeddings: List[List[float]] = [
-        glove.get(token, [random() * 2 - 1 for _ in range(glove_dim)])
+        glove.get(token, rand_embedding)
         for token in vocab.tokens
     ]
     embeddings = torch.tensor(embeddings)
@@ -111,13 +112,13 @@ def parse_args() -> Namespace:
         "--output_dir",
         type=Path,
         help="Directory to save the processed file.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache/intent/",
+        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache2/intent/",
     )
     parser.add_argument(
         "--vocab_size",
         type=int,
         help="Number of token in the vocabulary",
-        default=10_000,
+        default=5_000,
     )
     args = parser.parse_args()
     return args
