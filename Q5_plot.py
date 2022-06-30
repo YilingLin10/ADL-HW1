@@ -8,6 +8,7 @@ import numpy as np
 import torch
 from tqdm import trange, tqdm
 import torch.nn.functional as F
+from torch.utils.tensorboard import SummaryWriter
 
 from dataset import SeqClsDataset
 from utils import Vocab
@@ -48,6 +49,7 @@ def main(args):
         datasets[TRAIN].num_classes,
     )
     model = model.to(args.device)
+    writer = SummaryWriter()
     # TODO: init optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay = 1e-6)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[3,5,7], gamma=0.5)
@@ -75,6 +77,7 @@ def main(args):
             training_bar.set_postfix({'loss': loss.detach().item()})
         
         mean_train_loss = sum(loss_record)/len(loss_record)
+        writer.add_scalar('train loss', mean_train_loss, step)
         # TODO: Evaluation loop - calculate accuracy and save model weights
         model.eval()
         loss_record = []
@@ -89,6 +92,7 @@ def main(args):
             
         mean_valid_loss = sum(loss_record)/len(loss_record)
         print(f'Epoch [{epoch+1}/{args.num_epoch}]: train loss: {mean_train_loss:.4f}/ valid loss: {mean_valid_loss:.4f}')
+        writer.add_scalar('valid loss', mean_valid_loss, step)
         scheduler.step()
         
         # save current model if its valid loss is the lowest

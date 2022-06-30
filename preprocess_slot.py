@@ -41,26 +41,26 @@ def parse_args() -> Namespace:
         "--data_dir",
         type=Path,
         help="Directory to the dataset.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/data/slot/",
+        default="./data/slot/",
     )
     parser.add_argument(
         "--glove_path",
         type=Path,
         help="Path to Glove Embedding.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/glove.840B.300d.txt",
+        default="./glove.840B.300d.txt",
     )
     parser.add_argument("--rand_seed", type=int, help="Random seed.", default=13)
     parser.add_argument(
         "--output_dir",
         type=Path,
         help="Directory to save the processed file.",
-        default="./drive/MyDrive/ColabNotebooks/ADL21-HW1/cache/slot/",
+        default="./cache/slot/",
     )
     parser.add_argument(
         "--vocab_size",
         type=int,
         help="Number of token in the vocabulary",
-        default=10_000,
+        default=1_000,
     )
     args = parser.parse_args()
     return args
